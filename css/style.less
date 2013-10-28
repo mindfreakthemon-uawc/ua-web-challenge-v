@@ -1,0 +1,200 @@
+@import '../lib/less-prefixer/prefixer';
+
+body {
+	margin: 50px 0;
+}
+
+@timeline-zoom: 2;
+@timeline-width: @timeline-zoom * 1000px; // 1000 sec
+
+#editor {
+	overflow: auto;
+	margin: 20px 0 0;
+	padding: 20px 20px 200px;
+	background: #eee;
+	position: relative;
+}
+
+#ruler {
+	z-index: 20;
+
+	position: absolute;
+	top: -20px;
+	left: 0;
+	right: 0;
+
+	height: 20px;
+
+	background: url('../img/ruler.png') 0 0 repeat-x;
+	background-size: (@timeline-zoom / 2 * 20px) 20px;
+}
+
+#seeker {
+	z-index: 25;
+
+	position: absolute;
+	top: -20px;
+	left: 0;
+
+	width: (@timeline-zoom * 1px);
+	height: 20px;
+
+	cursor: move;
+
+	background: #7c761b;
+}
+
+#locker {
+	z-index: 30;
+
+	position: absolute;
+	top: 20px;
+	left: 0;
+	bottom: 0;
+
+	width: @timeline-width;
+
+	background: rgba(200, 200, 200, .4);
+}
+
+#timeline {
+	position: relative;
+	min-height: 20px;
+	width: @timeline-width;
+	margin: 0 0 0 -20px;
+
+	@track-height: 100px;
+
+	.track {
+		width: inherit;
+		position: relative;
+		height: @track-height;
+
+		&.track-image {
+			.duration {
+				min-width: 3px;
+			}
+
+			.playable-left-bar {
+				display: none;
+			}
+		}
+
+		.duration {
+			position: relative;
+
+			background: yellow;
+		}
+
+		.playable {
+			z-index: 5;
+
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+
+			background: lightblue;
+		}
+
+		.duration,
+		.playable {
+			display: block;
+			width: auto;
+			height: @track-height;
+		}
+
+		.details,
+		.movable {
+			z-index: 15;
+
+			position: absolute;
+			left: 0;
+
+			width: 100%;
+			height: 20px;
+		}
+
+		.movable {
+			top: 0;
+
+			cursor: move;
+
+			background: brown;
+		}
+
+		.details {
+			bottom: 0;
+
+			cursor: move;
+			font-size: 15px;
+			line-height: 15px;
+			padding: 0 10px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+
+			background: grey;
+		}
+
+		.playable-left-bar,
+		.playable-right-bar {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+
+			width: 2px;
+			height: inherit;
+			background: green;
+		}
+
+		.playable-left-bar {
+			left: 0;
+		}
+
+		.playable-right-bar {
+			right: 0;
+		}
+	}
+}
+
+#queue {
+	display: inline-block;
+
+	.track {
+		display: inline-block;
+		padding: 0 20px;
+	}
+}
+
+#fade {
+	display: none;
+
+	&.track-image,
+	&.track-video {
+		display: block;
+	}
+}
+
+#layers {
+	width: 100%;
+	height: 600px;
+	overflow: hidden;
+	position: relative;
+
+	background: #eee;
+
+	img,
+	video {
+		height: inherit;
+		width: inherit;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	audio {
+		visibility: hidden;
+	}
+}

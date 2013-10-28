@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>UA Web Challenge Video Editor</title>
+	<link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="/lib/jquery-ui/jquery-ui-1.10.3.custom.min.css" />
+	<link rel="stylesheet" type="text/css" href="/css/style.css" />
+	<script src="/lib/jquery-2.0.3.min.js"></script>
+	<script src="/lib/jquery-ui/jquery-ui-1.10.3.custom.min.js"></script>
+	<script src="/lib/handlebars.js"></script>
+	<script src="/lib/EventEmitter.min.js"></script>
+	<script src="/lib/FileSaver.js"></script>
+	<script src="/js/api.js"></script>
+	<script src="/js/ui.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div id="viewport">
+			<div id="layers"></div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<label>Add media: <input type="file" id="files" accept="video/*,audio/*,image/*" multiple class="btn btn-primary" /></label>
+				<div id="queue"></div>
+			</div>
+			<div class="col-xs-6">
+				<label>Load project: <input type="file" class="btn btn-warning" id="load" /></label>
+				<a href="javascript://" class="btn btn-info" id="save">Save project</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<h4>Player</h4>
+				<button class="btn btn-success" id="play">Play</button>
+				<button class="btn btn-default" id="pause" disabled>Pause</button>
+				<label>Volume: <input type="range" id="volume" min="0" max="100" value="100" /></label>
+			</div>
+
+			<div class="col-xs-6">
+
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-10">
+				<div id="editor">
+					<div id="locker" class="hidden"></div>
+					<div id="timeline">
+						<div id="ruler"></div>
+						<div id="seeker"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div id="track-info"></div>
+			</div>
+		</div>
+	</div>
+	<script class="inline-template" data-name="timeline_track" type="text/x-handlebars-template">
+		<div class="track track-{{track.type}}" data-track-id="{{track.id}}">
+			<div class="duration">
+				<div class="playable">
+					<div class="playable-left-bar ui-resizable-handle ui-resizable-w" title="Set start offset"></div>
+					<div class="playable-right-bar ui-resizable-handle ui-resizable-e" title="Set end offset"></div>
+				</div>
+				<div class="movable" title="Move track on timeline"></div>
+				<div class="details" title="Sort track by dragging this label">{{track.name}}</div>
+			</div>
+		</div>
+	</script>
+	<script class="inline-template" data-name="preloading_track" type="text/x-handlebars-template">
+		<div class="track" data-track-id="{{track.id}}">
+			<b>{{track.name}}:</b> <progress value="0" max="100"></progress>
+		</div>
+	</script>
+	<script class="inline-template" data-name="info_track" type="text/x-handlebars-template">
+		<h3>Track info <sup><a href="javascript://" class="close">&cross;</a></sup></h3>
+		<div class="track-name">{{track.name}} <sup class="track-type">{{track.type}}</sup></div>
+		<div class="track-duration">Duration: {{track.duration}} sec</div>
+		<div class="track-offset">Offset: {{track.offset}} sec</div>
+		{{#if track.height}}<div class="track-dimensions">Dimensions: {{track.width}}x{{track.height}}</div>{{/if}}
+		<div class="track-remove text-center" data-track-id="{{track.id}}">
+			<a href="javascript://" class="btn btn-danger btn-block">Remove track</a>
+		</div>
+		<div id="fade" class="track-{{track.type}}">
+			<h3>Fade effect</h3>
+			<p>
+				Effect, that will be applied to current and next (video/image) tracks if they are aligned properly.
+			</p>
+			<select class="track-fade" data-track-id="{{track.id}}">
+				<option value="">none</option>
+				<option value="slide-left">slide-left</option>
+				<option value="slide-right">slide-right</option>
+				<option value="opacity">opacity</option>
+			</select>
+		</div>
+	</script>
+</body>
+</html>
